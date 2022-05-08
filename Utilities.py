@@ -1,5 +1,6 @@
 from math import sin, atan2, cos, acos
 import math
+from re import X
 import struct
 from typing import List
 
@@ -95,12 +96,15 @@ class Triangle:
         self.indexes: list[int] = indexes
 
     def read(f):
-        return Triangle([readS32(f), readS32(f), readS32(f)])
+        a = readS32(f)
+        c = readS32(f)
+        b = readS32(f)
+        return Triangle([a, b, c])
 
     def write(self, f):
         writeS32(f, self.indexes[0])
-        writeS32(f, self.indexes[1])
         writeS32(f, self.indexes[2])
+        writeS32(f, self.indexes[1])
 
 
 class TexCoord:
@@ -129,19 +133,19 @@ class Vertex:
         y = readS16(f)
         z = readS16(f)
         oldNorm = readS16(f)
-        long = (oldNorm % 256)*(2*math.pi)/255.0
-        lat = (oldNorm/256)*(2*math.pi)/255.0
-        norm = [-cos(lat)*sin(long), -sin(lat)*sin(long), -cos(long)]
-
+        #print("oldNorm: ", oldNorm)
+        long = ((oldNorm % 256.0)/255.0)*(2*math.pi)
+        lat = ((oldNorm/256.0)/255.0)*(2*math.pi)
+        norm = [cos(lat)*sin(long), sin(lat)*sin(long), cos(long)]
         return Vertex(x, y, z, norm)
 
     def write(self, f):
         writeS16(f, self.x)
         writeS16(f, self.y)
         writeS16(f, self.z)
-        oldNorm = int(round(255.0*(atan2(-self.normal[1],
-                                         -self.normal[0])/(2*math.pi))))
-        oldNorm += int(round(255.0*(acos(-self.normal[2])/(2*math.pi))))*256
+        oldNorm = int(round(255.0*(atan2(self.normal[1],
+                                         self.normal[0])/(2*math.pi))))
+        oldNorm += int(round(255.0*(acos(self.normal[2])/(2*math.pi))))*256
         writeS16(f, oldNorm)
 
 

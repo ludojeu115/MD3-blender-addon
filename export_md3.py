@@ -162,7 +162,7 @@ def export(obj, filepath):
             if mat.node_tree.nodes.get("Image Texture") is not None:
                 shaders.append(ut.Shader(
                     mat.node_tree.nodes["Image Texture"].
-                    image.filepath.rsplit("\\", 1)[-1], 0))
+                    image.filepath.rsplit("\\", 1)[1], 0))
 
             nodes = [ut.Shader(node.name, node.outputs[0].default_value)
                      for node in mat.node_tree.nodes

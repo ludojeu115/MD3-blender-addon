@@ -7,12 +7,8 @@ if "ut" in locals():
     import importlib
     importlib.reload(ut)
 
-verts: list[mathutils.Vector] = []
-edges: list = []
-faces: list = []
-
-
 def create_alpha_material(name, image_path) -> bpy.types.Material:
+    print(image_path)
     mat = bpy.data.materials.new(name)
     mat.blend_method = 'CLIP'
     mat.use_nodes = True
@@ -47,9 +43,10 @@ def main(context,
          *,
          relpath=None,
          ):
-    # print()
-    # print("Started importing : ", filepath)
-    # print()
+    
+    verts: list[mathutils.Vector] = []
+    edges: list = []
+    faces: list = []
 
     file = open(filepath, "rb")
     _ = ut.readS32(file)
@@ -161,7 +158,7 @@ def main(context,
             i += 3
 
         # Create materials
-
+        print(dirname(filepath))
         path = join(dirname(filepath), sur.shaders[0].name)
         mat = create_alpha_material(sur.NAME, path)
         obj.data.materials.append(mat)
@@ -180,7 +177,8 @@ def main(context,
     vertexes = [sur.xyzs[0] for sur in surface]
     for v1 in vertexes:
         for v2 in v1:
-            normals.append(v2.normal)
+            print(v2.normal)
+            normals.append(mathutils.Vector([x for x in v2.normal]))
 
     obj.data.normals_split_custom_set_from_vertices(normals)
 
