@@ -8,7 +8,7 @@ if "ut" in locals():
     importlib.reload(ut)
 
 def create_alpha_material(name, image_path) -> bpy.types.Material:
-    print(image_path)
+    # print(image_path)
     mat = bpy.data.materials.new(name)
     mat.blend_method = 'CLIP'
     mat.use_nodes = True
@@ -158,7 +158,7 @@ def main(context,
             i += 3
 
         # Create materials
-        print(dirname(filepath))
+        # print(dirname(filepath))
         path = join(dirname(filepath), sur.shaders[0].name)
         mat = create_alpha_material(sur.NAME, path)
         obj.data.materials.append(mat)
@@ -177,7 +177,7 @@ def main(context,
     vertexes = [sur.xyzs[0] for sur in surface]
     for v1 in vertexes:
         for v2 in v1:
-            print(v2.normal)
+            # print(v2.normal)
             normals.append(mathutils.Vector([x for x in v2.normal]))
 
     obj.data.normals_split_custom_set_from_vertices(normals)

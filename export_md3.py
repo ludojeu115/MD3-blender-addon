@@ -30,11 +30,11 @@ def export(obj, filepath):
     exportFile = open(filepath,
                       "w+b")
 
-    # print("MD3 export")
-    # print("Started exporting : ", obj.name)
-    # print()
-    # print("Exporting simple values ...")
-    # print()
+    print("MD3 export")
+    print("Started exporting : ", obj.name)
+    print()
+    #print("Exporting simple values ...")
+    #print()
 
     ut.writeS32(exportFile, IDENT)
     ut.writeS32(exportFile, VERSION)
@@ -160,9 +160,17 @@ def export(obj, filepath):
 
         if num_shaders > 0:
             if mat.node_tree.nodes.get("Image Texture") is not None:
-                shaders.append(ut.Shader(
-                    mat.node_tree.nodes["Image Texture"].
-                    image.filepath.rsplit("\\", 1)[1], 0))
+                node = mat.node_tree.nodes.get("Image Texture")
+                #if node.image.filepath start with "//" then use string after "//" as path
+                if node.image.filepath.startswith("//"):
+                    path = node.image.filepath[2:]
+                else: 
+                    path = node.image.filepath.rsplit("\\", 1)[1]
+                
+                #print path 
+                print(node.image.filepath)
+                print(path)
+                shaders.append(ut.Shader( path, 0))
 
             nodes = [ut.Shader(node.name, node.outputs[0].default_value)
                      for node in mat.node_tree.nodes
@@ -212,9 +220,9 @@ def export(obj, filepath):
     ut.writeS32(exportFile, current_position)
     exportFile.seek(current_position)
 
-    # print()
-    # print("Exporting finished")
-    # print()
+    print()
+    print("Exporting finished")
+    print()
 
 
 def main(context,

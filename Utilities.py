@@ -143,9 +143,15 @@ class Vertex:
         writeS16(f, self.x)
         writeS16(f, self.y)
         writeS16(f, self.z)
+        # print(self.normal)
+        
         oldNorm = int(round(255.0*(atan2(self.normal[1],
                                          self.normal[0])/(2*math.pi))))
         oldNorm += int(round(255.0*(acos(self.normal[2])/(2*math.pi))))*256
+        if self.normal[2]==-1:
+            oldNorm = 32767
+        if self.normal[2]==1:
+            oldNorm = 0
         writeS16(f, oldNorm)
 
 
